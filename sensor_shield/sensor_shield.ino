@@ -68,7 +68,7 @@ void loop() { //put your main code here, to run repeatedly:
       Serial.print("Status: ");
       Serial.println(hih.getStatus());
 }
-
+  // hello
     sensorValue = analogRead(TSLPIN); //read light value from sensor
     Serial.println(sensorValue); //prints value from the sensor to serial monitor
     delay(100); //Delay 1000ms = 1 sec

@@ -16,20 +16,16 @@
 int chk;
 int sensorValue = 0; //variable to store the value coming from the sensor
 SoftWire sw(SDA, SCL);
- 
+HIH61xx<SoftWire> hih(sw);
+AsyncDelay samplingInterval; 
+uint8_t i2cRxBuffer[4];
+uint8_t i2cTxBuffer[32];
+
+
 void setup() { // put your setup code here, to run once:
-  #if F_CPU >= 12000000UL
+
     Serial.begin(9600);
-  #else
-    Serial.begin(9600);
-    HIH61xx<SoftWire> hih(sw);
-    AsyncDelay samplingInterval;
-// SoftWire requires that the programmer declares the buffers used. This allows the amount
-    of memory used to be set
-// according to need. For the HIH61xx only a very small RX buffer is needed.
-    uint8_t i2cRxBuffer[4];
-    uint8_t i2cTxBuffer[32];
-  #endif
+
 // The pin numbers for SDA/SCL can be overridden at runtime.
     sw.setSda(A4); //DATA PIN ALLOCATION
     sw.setScl(A5); //CLOCK PIN ALLOCATION
@@ -68,8 +64,8 @@ void loop() { //put your main code here, to run repeatedly:
       Serial.print("Status: ");
       Serial.println(hih.getStatus());
 }
-  // hello
+  
     sensorValue = analogRead(TSLPIN); //read light value from sensor
     Serial.println(sensorValue); //prints value from the sensor to serial monitor
-    delay(100); //Delay 1000ms = 1 sec
+    delay(1000); //Delay 1000ms = 1 sec
 }

@@ -35,6 +35,17 @@ void setup() { // put your setup code here, to run once:
     Serial.begin(9600);
     Serial.println("Adafruit MMA8451 test!");
     
+    // The pin numbers for SDA/SCL can be overridden at runtime.
+    sw.setSda(A4); //DATA PIN ALLOCATION
+    sw.setScl(A5); //CLOCK PIN ALLOCATION
+    sw.setRxBuffer(i2cRxBuffer, sizeof(i2cRxBuffer));
+    //sw.setTxBuffer(i2cTxBuffer, sizeof(i2cTxBuffer));
+    // HIH61xx doesn't need a TX buffer at all but other I2C devices probably will.
+    //sw.setTxBuffer(i2cTxBuffer, sizeof(i2cTxBuffer));
+    sw.setTxBuffer(NULL, 0);
+    sw.begin(); // Sets up pin mode for SDA and SCL
+    hih.initialise();
+    samplingInterval.start(1000, AsyncDelay::MILLIS);
     if (! mma.begin()) {
       Serial.println("Couldnt start");
     while (1);
@@ -45,18 +56,8 @@ void setup() { // put your setup code here, to run once:
     Serial.println("G");
     }
 
-// The pin numbers for SDA/SCL can be overridden at runtime.
-    sw.setSda(A4); //DATA PIN ALLOCATION
-    sw.setScl(A5); //CLOCK PIN ALLOCATION
-    sw.setRxBuffer(i2cRxBuffer, sizeof(i2cRxBuffer));
-//sw.setTxBuffer(i2cTxBuffer, sizeof(i2cTxBuffer));
-// HIH61xx doesn't need a TX buffer at all but other I2C devices probably will.
-//sw.setTxBuffer(i2cTxBuffer, sizeof(i2cTxBuffer));
-    sw.setTxBuffer(NULL, 0);
-    sw.begin(); // Sets up pin mode for SDA and SCL
-    hih.initialise();
-    samplingInterval.start(1000, AsyncDelay::MILLIS);
-}
+
+
 
 bool printed = true; 
 
@@ -83,7 +84,7 @@ void loop() { //put your main code here, to run repeatedly:
           Serial.println("Portrait Up Front");
         break;
         case MMA8451_PL_PUB:
-          erial.println("Portrait Up Back");
+          Serial.println("Portrait Up Back");
         break;
         case MMA8451_PL_PDF:
           Serial.println("Portrait Down Front");
@@ -106,7 +107,7 @@ void loop() { //put your main code here, to run repeatedly:
         }
       Serial.println();
     delay(500);
-}
+  
 
     if (samplingInterval.isExpired() && !hih.isSampling()) {
       hih.start();
